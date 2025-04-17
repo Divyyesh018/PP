@@ -1,0 +1,62 @@
+import numpy as np
+
+# Days of the week and setup
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+month_expenses = {day: [] for day in days}
+
+def get_day_name(day_number):
+    switcher = {
+        1: "Monday",
+        2: "Tuesday",
+        3: "Wednesday",
+        4: "Thursday",
+        5: "Friday",
+        6: "Saturday",
+        7: "Sunday"
+    }
+    return switcher.get(day_number, None)
+
+print("📅 Monthly Budget Tracker")
+print("Enter your expenses by selecting a day number:")
+print("1. Monday\n2. Tuesday\n3. Wednesday\n4. Thursday\n5. Friday\n6. Saturday\n7. Sunday")
+print("Type 0 to finish.\n")
+
+while True:
+    try:
+        day_num = int(input("Select a day (1-7) or 0 to exit: "))
+        if day_num == 0:
+            break
+
+        day_name = get_day_name(day_num)
+        if not day_name:
+            print("❌ Invalid day number. Please select between 1 and 7.")
+            continue
+
+        amount = float(input(f"Amount spent on {day_name}: ₹"))
+        month_expenses[day_name].append(amount)
+    
+    except ValueError:
+        print("❌ Please enter valid numbers only.")
+
+# Generate Report
+print("\n📊 Monthly Expense Report:")
+
+totals = {}
+for day, expenses in month_expenses.items():
+    np_exp = np.array(expenses)
+    totals[day] = np_exp.sum()
+
+for day in days:
+    print(f"{day}: ₹{totals[day]:.2f}")
+
+# Summary
+total_month = sum(totals.values())
+average_day = total_month / 30
+max_day = max(totals, key=totals.get)
+min_day = min(totals, key=totals.get)
+
+print("\n🧾 Summary:")
+print(f"Total spent in month: ₹{total_month:.2f}")
+print(f"Average spending per day: ₹{average_day:.2f}")
+print(f"Highest spending day: {max_day} (₹{totals[max_day]:.2f})")
+print(f"Lowest spending day: {min_day} (₹{totals[min_day]:.2f})")
